@@ -1,12 +1,9 @@
 import Vec from "victor";
 import { Particle } from "./particle";
 export class Spring {
-	constructor(k, length, a = new Particle(), b = new Particle()) {
-		this.k = k
-		this.length = length
-		this.a = a
-		this.b = b
-	}
+
+	constructor(private k: number, private length: number, private a: Particle, private b: Particle) { }
+
 	draw(ctx = new CanvasRenderingContext2D()) {
 		ctx.strokeStyle = "blue"
 		ctx.lineWidth = 5
@@ -18,7 +15,7 @@ export class Spring {
 	update() {
 		let distV = this.a.pos.clone().subtract(this.b.pos);
 		let dist = distV.length();
-		let force = distV.normalize().multiplyScalar((dist - this.length) * this.k)
+		let force = distV.normalize().multiplyScalar((dist - this.length) * this.k / 2)
 		this.b.addForce(force)
 		this.a.addForce(force.multiplyScalar(-1))
 	}
