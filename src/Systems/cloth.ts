@@ -8,7 +8,6 @@ export class Cloth extends ParticleSystem {
 	constructor(private count: number, private spacing: number, k: number = 0.01) {
 		super()
 		for (let i = 0; i < this.count; i++) {
-
 			for (let j = 0; j < this.count; j++) {
 				this.particles.push(new Particle(new Vec(window.innerWidth / 2 - this.count * spacing / 2 + j * spacing, i * spacing), 5, 1, i != 0))
 				if (j) {
@@ -22,12 +21,13 @@ export class Cloth extends ParticleSystem {
 			}
 		}
 	}
-	draw(ctx: CanvasRenderingContext2D, beizer: boolean = false) {
-		if (!beizer) {
+	draw(ctx: CanvasRenderingContext2D, bezier: boolean = false) {
+		if (!bezier) {
 			super.draw(ctx)
 		} else {
 			ctx.strokeStyle = "blue"
 			ctx.lineWidth = 5
+
 			ctx.beginPath();
 			for (let i = 0; i < this.count; i++) {
 				ctx.moveTo(this.particles[i * this.count].pos.x, this.particles[i * this.count].pos.y);

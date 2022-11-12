@@ -12,10 +12,10 @@ export class Spring {
 		ctx.lineTo(this.b.pos.x, this.b.pos.y)
 		ctx.stroke()
 	}
+
 	update() {
-		let distV = this.a.pos.clone().subtract(this.b.pos);
-		let dist = distV.length();
-		let force = distV.normalize().multiplyScalar((dist - this.length) * this.k / 2)
+		let dist = this.a.pos.clone().subtract(this.b.pos);
+		let force = dist.normalize().multiplyScalar((dist.length() - this.length) * this.k / 2)
 		this.b.addForce(force)
 		this.a.addForce(force.multiplyScalar(-1))
 	}

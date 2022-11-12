@@ -4,6 +4,7 @@ import Vec from "victor";
 import { Particle } from "../particle";
 
 export class Line extends ParticleSystem {
+
 	constructor(private count: number, private spacing: number, k: number = 0.01) {
 		super()
 		for (let j = 0; j < this.count; j++) {
@@ -13,14 +14,15 @@ export class Line extends ParticleSystem {
 			}
 		}
 	}
-	draw(ctx: CanvasRenderingContext2D, beizer: boolean = false) {
-		if (!beizer) {
+
+	draw(ctx: CanvasRenderingContext2D, bezier: boolean = false) {
+		if (!bezier) {
 			super.draw(ctx)
 		} else {
 			ctx.strokeStyle = "blue"
 			ctx.lineWidth = 5
-			ctx.beginPath();
 
+			ctx.beginPath();
 			ctx.moveTo(this.particles[0].pos.x, this.particles[0].pos.y);
 			for (let i = 1; i < this.particles.length - 2; i++) {
 				var xc = (this.particles[i].pos.x + this.particles[i + 1].pos.x) / 2;
