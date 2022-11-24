@@ -9,9 +9,9 @@ import { DrawMethods } from "./DrawMethods.js";
 
 const gravity = new Vec(0, 0.1)
 
-const friction = 0.05
+const friction = 0.02
 
-const spacing = 50, k = 0.03
+const spacing = 50, k = 0.05
 const count = 10;
 
 const types = {
@@ -28,7 +28,7 @@ function resizeCanvas() {
 
 window.onresize = resizeCanvas;
 resizeCanvas();
-let sim = new Simulation(types.line, DrawMethods.linesAndDots, gravity, canvas, friction);
+let sim = new Simulation(types.cloth, DrawMethods.bezier, gravity, canvas, friction);
 
 
 sim.enableSelecting()
