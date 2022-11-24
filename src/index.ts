@@ -3,11 +3,15 @@ import { Cloth } from "./Systems/cloth.js";
 import { Line } from "./Systems/line.js";
 import { Particle } from "./particle.js"
 import { ParticleSystem } from "./Systems/ParticleSystem.js";
+import { Simulation } from "./simulation.js";
+import { DrawMethods } from "./DrawMethods.js";
 
 
-const bezier = true;
-const gravity = new Vec(0, 1)
-const spacing = 50, k = 0.1
+const gravity = new Vec(0, 0.1)
+
+const friction = 0.05
+
+const spacing = 50, k = 0.03
 const count = 10;
 
 const types = {
@@ -15,43 +19,18 @@ const types = {
 	"cloth": new Cloth(count, spacing, k),
 }
 
-Particle.friction = 0.01;
-let t: ParticleSystem = types.cloth;
-
-let isMousePressed = false, mousePos = new Vec(0, 0);
-let selected: Particle | null = null;
-
-
 let canvas = document.getElementsByTagName("canvas")[0];
-canvas.width = window.innerWidth
-canvas.height = window.innerHeight
-canvas.addEventListener("mouseup", () => { isMousePressed = false; selected = null })
-canvas.addEventListener("mousemove", (ev) => {
-	mousePos.x = ev.clientX; mousePos.y = ev.clientY;
-	if (isMousePressed && selected) {
-		selected.pos = mousePos.clone();
-		selected.velocity.multiplyScalar(0);
-	}
-})
-canvas.addEventListener("mousedown", (ev) => {
-	isMousePressed = true;
-	mousePos.x = ev.clientX; mousePos.y = ev.clientY
-	for (const p of t.particles) {
-		if (p.pos.clone().subtract(mousePos).length() < p.radius + 5) {
-			selected = p;
-		}
-	}
-})
 
-let ctx = canvas.getContext("2d")!;
-
-function animate() {
-	ctx.fillStyle = "black"
-	ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-	t.update(gravity)
-	t.draw(ctx, bezier)
-
-	requestAnimationFrame(animate);
+function resizeCanvas() {
+	canvas.width = window.innerWidth
+	canvas.height = window.innerHeight
 }
-animate();
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+let sim = new Simulation(types.line, DrawMethods.linesAndDots, gravity, canvas, friction);
+
+
+sim.enableSelecting()
+
+sim.run();

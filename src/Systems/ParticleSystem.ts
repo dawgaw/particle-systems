@@ -1,13 +1,17 @@
 import { Particle } from "../particle";
-import { Spring } from "../spring";
+import { Spring } from "../Connectors/spring";
 import Vec from "victor";
+import { Connector } from "../Connectors/connector";
+import { DrawMethods } from "../DrawMethods";
 
-export class ParticleSystem {
+export abstract class ParticleSystem {
 	particles: Particle[] = []
-	springs: Spring[] = []
+	connectors: Connector[] = []
 
-	draw(ctx: CanvasRenderingContext2D, beizer: boolean = false) {
-		for (const i of this.springs) {
+	abstract drawBezier(ctx: CanvasRenderingContext2D)
+
+	draw(ctx: CanvasRenderingContext2D) {
+		for (const i of this.connectors) {
 			i.draw(ctx);
 		}
 		for (const i of this.particles) {
@@ -15,14 +19,15 @@ export class ParticleSystem {
 		}
 	}
 
-	update(gravity = new Vec(0, 0)) {
+	update(gravity: Vec, friction: number) {
+		for (const i of this.connectors) {
+			i.update()
+		}
 		for (const i of this.particles) {
 			if (i.physics)
-				i.acceleration.add(gravity)
-			i.update()
+				i.accelerate(gravity)
+			i.update(1, friction)
 		}
-		for (const i of this.springs) {
-			i.update()
-		}
+
 	}
 }

@@ -1,15 +1,17 @@
 import Vec from "victor";
 
 export class Particle {
-	static friction = 0
 
-	acceleration: Vec = new Vec(0, 0)
-	velocity: Vec = new Vec(0, 0)
-
-	constructor(public pos: Vec = new Vec(0, 0), public radius: number = 20, private mass: number = 1, public physics: boolean = true) { }
-
+	private acceleration: Vec = new Vec(0, 0)
+	prevPos: Vec
+	constructor(public pos: Vec, public radius: number = 20, private mass: number = 1, public physics: boolean = true) {
+		this.prevPos = pos.clone();
+	}
 	addForce(force: Vec) {
-		this.acceleration.add(force.clone().divideScalar(this.mass));
+		this.acceleration.add(force.clone().divideScalar(1))
+	}
+	accelerate(acc: Vec) {
+		this.acceleration.add(acc);
 	}
 
 	draw(ctx: CanvasRenderingContext2D) {
@@ -19,12 +21,13 @@ export class Particle {
 		ctx.fill()
 	}
 
-	update() {
+	update(dt, friction) {
 		if (this.physics) {
-			this.velocity.add(this.acceleration)
-			this.pos.add(this.velocity)
-			this.velocity.multiplyScalar(1 - Particle.friction)
-			this.acceleration.multiplyScalar(0)
+			let velocity = this.pos.clone().subtract(this.prevPos).multiplyScalar(1 - friction);
+			this.prevPos = this.pos.clone()
+			this.pos.add(velocity).add(this.acceleration.multiplyScalar(dt))
+
 		}
+		this.acceleration.multiplyScalar(0)
 	}
 }
